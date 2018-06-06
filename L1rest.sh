@@ -15,7 +15,7 @@ datadir=${MAINDATADIR}/${subj}/MNINonLinear/Results/rfMRI_${task}_${run}
 OUTPUTDIR=${MAINOUTPUTDIR}/${subj}/MNINonLinear/Results/rfMRI_${task}_${run}
 mkdir -p $OUTPUTDIR
 
-OUTPUT=${OUTPUTDIR}/L1_${task}_${run}
+OUTPUT=${OUTPUTDIR}/L1_${task}_${run}_${H}hemi
 DATA=${datadir}/rfMRI_${task}_${run}_hp2000_clean.nii.gz
 NVOLUMES=`fslnvols ${DATA}`
 
