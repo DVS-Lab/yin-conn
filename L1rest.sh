@@ -15,7 +15,7 @@ datadir=${MAINDATADIR}/${subj}/MNINonLinear/Results/rfMRI_${task}_${run}
 OUTPUTDIR=${MAINOUTPUTDIR}/${subj}/MNINonLinear/Results/rfMRI_${task}_${run}
 mkdir -p $OUTPUTDIR
 
-OUTPUT=${OUTPUTDIR}/L1_${task}_${run}_${H}hemi
+OUTPUT=${OUTPUTDIR}/L1_${task}_${run}_${H}-hemi
 DATA=${datadir}/rfMRI_${task}_${run}_hp2000_clean.nii.gz
 NVOLUMES=`fslnvols ${DATA}`
 
@@ -30,7 +30,7 @@ done
 
 #find and replace: run feat for smoothing
 ITEMPLATE=${basedir}/templates/L1_rest.fsf
-OTEMPLATE=${OUTPUTDIR}/L1_rest_${run}.fsf
+OTEMPLATE=${OUTPUTDIR}/L1_rest_${run}_${H}-hemi.fsf
 sed -e 's@OUTPUT@'$OUTPUT'@g' \
 -e 's@DATA@'$DATA'@g' \
 -e 's@NVOLUMES@'$NVOLUMES'@g' \
