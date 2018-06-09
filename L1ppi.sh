@@ -25,7 +25,7 @@ if [ -d ${OUTPUT}.feat ]; then
 fi
 
 maskdir=${basedir}/masks/${subj}
-DATA=${OUTPUTDIR}/smoothing.feat/ICA_AROMA/denoised_func_data_nonaggr.nii.gz
+DATA=${OUTPUTDIR}/filtered.feat/filtered_func_data.nii.gz
 NVOLUMES=`fslnvols ${DATA}`
 EVDIR=${datadir}/EVs
 PHYSTS=${OUTPUTDIR}/${H}_PPIseed-${PPIseed}.txt
@@ -41,7 +41,7 @@ if [ "$PPItype" == "partial" ]; then
 	-e 's@PHYSTS@'$PHYSTS'@g' \
 	<$ITEMPLATE> ${OTEMPLATE}
 	feat ${OTEMPLATE}
-	
+
 elif [ "$PPItype" == "full" ]; then
 	if [ "$PPIseed" == "V1" ]; then
 		ROI_list=( OFA FFA ATL pSTS IFG AMG OFC PCC )
