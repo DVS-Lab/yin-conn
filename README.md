@@ -17,8 +17,8 @@ For this set of analyses, we have a few more things to consider in terms of prep
 1. Update submission scripts (submit_runAROMA.sh and submit_runFilter.sh) to work with cluster.
 1. First run `submit_runAROMA.sh` on all data. Then run `submit_runFilter.sh` on all of the outputs of runAROMA.sh. (order here is essential)
 
-Now that the data have been pre-processed in a way that resembles the REST data, we can run our PPI models. For that, we have two basic PPI models. The first one is "full" and includes all of the ROI timecourses (from one hemisphere); and the second one is "partial" and includes only the see region of interest. In my view, the "full" model is what we want since it is closer to the REST analyses and controls for responses in the other regions. Here's how to run it:
+Now that the data have been pre-processed in a way that resembles the REST data, we can run our PPI models. For that, we have two basic PPI models. The first one is "full" and includes all of the ROI timecourses (from one hemisphere); and the second one is "partial" and includes only the seed region of interest. In my view, the "full" model is what we want since it is closer to the REST analyses because it controls for responses in the other regions. Here's how to run it:
 1. Update paths in L1ppi.sh
 1. Test on one subject/run: `bash L1ppi.sh LR 100307 L OFC full`
-1. Update submission script (submit_L1ppi.sh)
+1. Update submission script (submit_L1ppi.sh) to work with cluster.
 1. TODO: Make L2 script.
