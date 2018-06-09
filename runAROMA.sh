@@ -1,11 +1,10 @@
 #!/bin/bash
 
-basedir=`pwd`
-MAINDATADIR=${basedir}/data
-MAINOUTPUTDIR=${basedir}/fsl
+# change these paths (should be the only paths you need to change)
+basedir=`pwd` # currently the GitHub repo
+MAINDATADIR=${basedir}/data # base directory for your input data
+MAINOUTPUTDIR=${basedir}/fsl # base directory for your ouput results
 
-
-#testing
 task=$1
 run=$2
 subj=$3
@@ -56,5 +55,3 @@ bet $inputmask $aromamask -f 0.3 -n -m -R
 
 #running AROMA
 python ${basedir}/ICA-AROMA-master/ICA_AROMA_Nonormalizing.py -in $myinput -out $myoutput -mc $mcfile -m ${aromamask}_mask.nii.gz
-
-
