@@ -49,7 +49,7 @@ for i in `seq 0 7`; do
 	eval ROI$N=$TSFILE
 done
 EVDIR=${datadir}/EVs
-PHYSTS=${OUTPUTDIR}/${H}_PPIseed-${PPIseed}_roi-${i}.txt
+PHYSTS=${OUTPUTDIR}/${H}_PPIseed-${PPIseed}.txt
 fslmeants -i ${DATA} -o $PHYSTS -m ${maskdir}/${H}_${PPIseed}.nii
 
 
