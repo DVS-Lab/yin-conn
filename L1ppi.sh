@@ -1,77 +1,106 @@
 #!/bin/bash
 
-basedir=`pwd`
-MAINDATADIR=${basedir}/data
-MAINOUTPUTDIR=${basedir}/fsl
+# change these paths (should be the only paths you need to change)
+basedir=`pwd` # currently the GitHub repo
+MAINDATADIR=${basedir}/data # base directory for your input data
+MAINOUTPUTDIR=${basedir}/fsl # base directory for your ouput results
 
 
-#testing
+#inputs for the script
 task=WM
 run=$1
 subj=$2
 H=$3
 PPIseed=$4
+PPItype=$5 # full (all ROI regressors) or partial (only seed ROI regressor)
 
 datadir=${MAINDATADIR}/${subj}/MNINonLinear/Results/tfMRI_${task}_${run}
 OUTPUTDIR=${MAINOUTPUTDIR}/${subj}/MNINonLinear/Results/tfMRI_${task}_${run}
 mkdir -p $OUTPUTDIR
 
-OUTPUT=${OUTPUTDIR}/L1_${task}_${run}_PPIseed-${H}-${PPIseed}
-rm -rf ${OUTPUT}.feat
-DATA=${OUTPUTDIR}/smoothing.feat/ICA_AROMA/denoised_func_data_nonaggr.nii.gz
-NVOLUMES=`fslnvols ${DATA}`
-
-maskdir=${basedir}/masks/${subj}
-if [ "$PPIseed" == "V1" ]; then
-	ROI_list=( OFA FFA ATL pSTS IFG AMG OFC PCC )
-elif [ "$PPIseed" == "OFA" ]; then
-	ROI_list=( V1 FFA ATL pSTS IFG AMG OFC PCC )
-elif [ "$PPIseed" == "FFA" ]; then
-	ROI_list=( V1 OFA ATL pSTS IFG AMG OFC PCC )
-elif [ "$PPIseed" == "ATL" ]; then
-	ROI_list=( V1 OFA FFA pSTS IFG AMG OFC PCC )
-elif [ "$PPIseed" == "pSTS" ]; then
-	ROI_list=( V1 OFA FFA ATL IFG AMG OFC PCC )
-elif [ "$PPIseed" == "IFG" ]; then
-	ROI_list=( V1 OFA FFA ATL pSTS AMG OFC PCC )
-elif [ "$PPIseed" == "AMG" ]; then
-	ROI_list=( V1 OFA FFA ATL pSTS IFG OFC PCC )
-elif [ "$PPIseed" == "OFC" ]; then
-	ROI_list=( V1 OFA FFA ATL pSTS IFG AMG PCC )
-elif [ "$PPIseed" == "PCC" ]; then
-	ROI_list=( V1 OFA FFA ATL pSTS IFG AMG OFC )
+# delete old output if it's there to avoid +.feat directories. could improve this.
+OUTPUT=${OUTPUTDIR}/L1_${task}_${run}_PPIseed-${H}-${PPIseed}_${PPItype}
+if [ -d ${OUTPUT}.feat ]; then
+	rm -rf ${OUTPUT}.feat
 fi
 
-for i in `seq 0 7`; do
-	TSFILE=${OUTPUTDIR}/${H}_${ROI_list[$i]}_PPIseed-${PPIseed}_roi-${i}.txt
-	fslmeants -i ${DATA} -o $TSFILE -m ${maskdir}/${H}_${ROI_list[$i]}.nii
-	let N=$i+1
-	eval ROI$N=$TSFILE
-done
+maskdir=${basedir}/masks/${subj}
+DATA=${OUTPUTDIR}/smoothing.feat/ICA_AROMA/denoised_func_data_nonaggr.nii.gz
+NVOLUMES=`fslnvols ${DATA}`
 EVDIR=${datadir}/EVs
 PHYSTS=${OUTPUTDIR}/${H}_PPIseed-${PPIseed}.txt
 fslmeants -i ${DATA} -o $PHYSTS -m ${maskdir}/${H}_${PPIseed}.nii
 
+if [ "$PPItype" == "partial" ]; then
+	ITEMPLATE=${basedir}/templates/L1_ppi_partial.fsf
+	OTEMPLATE=${OUTPUTDIR}/L1_task_${run}_PPIseed-${PPIseed}_partial.fsf
+	sed -e 's@OUTPUT@'$OUTPUT'@g' \
+	-e 's@DATA@'$DATA'@g' \
+	-e 's@NVOLUMES@'$NVOLUMES'@g' \
+	-e 's@EVDIR@'$EVDIR'@g' \
+	-e 's@PHYSTS@'$PHYSTS'@g' \
+	<$ITEMPLATE> ${OTEMPLATE}
+	feat ${OTEMPLATE}
+	
+elif [ "$PPItype" == "full" ]; then
+	if [ "$PPIseed" == "V1" ]; then
+		ROI_list=( OFA FFA ATL pSTS IFG AMG OFC PCC )
+	elif [ "$PPIseed" == "OFA" ]; then
+		ROI_list=( V1 FFA ATL pSTS IFG AMG OFC PCC )
+	elif [ "$PPIseed" == "FFA" ]; then
+		ROI_list=( V1 OFA ATL pSTS IFG AMG OFC PCC )
+	elif [ "$PPIseed" == "ATL" ]; then
+		ROI_list=( V1 OFA FFA pSTS IFG AMG OFC PCC )
+	elif [ "$PPIseed" == "pSTS" ]; then
+		ROI_list=( V1 OFA FFA ATL IFG AMG OFC PCC )
+	elif [ "$PPIseed" == "IFG" ]; then
+		ROI_list=( V1 OFA FFA ATL pSTS AMG OFC PCC )
+	elif [ "$PPIseed" == "AMG" ]; then
+		ROI_list=( V1 OFA FFA ATL pSTS IFG OFC PCC )
+	elif [ "$PPIseed" == "OFC" ]; then
+		ROI_list=( V1 OFA FFA ATL pSTS IFG AMG PCC )
+	elif [ "$PPIseed" == "PCC" ]; then
+		ROI_list=( V1 OFA FFA ATL pSTS IFG AMG OFC )
+	fi
 
-#find and replace: run feat for smoothing
-ITEMPLATE=${basedir}/templates/L1_ppi_full.fsf
-OTEMPLATE=${OUTPUTDIR}/L1_task_${run}_PPIseed-${PPIseed}.fsf
-sed -e 's@OUTPUT@'$OUTPUT'@g' \
--e 's@DATA@'$DATA'@g' \
--e 's@NVOLUMES@'$NVOLUMES'@g' \
--e 's@ROI1@'$ROI1'@g' \
--e 's@ROI2@'$ROI2'@g' \
--e 's@ROI3@'$ROI3'@g' \
--e 's@ROI4@'$ROI4'@g' \
--e 's@ROI5@'$ROI5'@g' \
--e 's@ROI6@'$ROI6'@g' \
--e 's@ROI7@'$ROI7'@g' \
--e 's@ROI8@'$ROI8'@g' \
--e 's@EVDIR@'$EVDIR'@g' \
--e 's@PHYSTS@'$PHYSTS'@g' \
-<$ITEMPLATE> ${OTEMPLATE}
-feat ${OTEMPLATE}
+	for i in `seq 0 7`; do
+		TSFILE=${OUTPUTDIR}/${H}_${ROI_list[$i]}_PPIseed-${PPIseed}_roi-${i}.txt
+		fslmeants -i ${DATA} -o $TSFILE -m ${maskdir}/${H}_${ROI_list[$i]}.nii
+		let N=$i+1
+		eval ROI$N=$TSFILE
+	done
 
+	ITEMPLATE=${basedir}/templates/L1_ppi_full.fsf
+	OTEMPLATE=${OUTPUTDIR}/L1_task_${run}_PPIseed-${PPIseed}_full.fsf
+	sed -e 's@OUTPUT@'$OUTPUT'@g' \
+	-e 's@DATA@'$DATA'@g' \
+	-e 's@NVOLUMES@'$NVOLUMES'@g' \
+	-e 's@ROI1@'$ROI1'@g' \
+	-e 's@ROI2@'$ROI2'@g' \
+	-e 's@ROI3@'$ROI3'@g' \
+	-e 's@ROI4@'$ROI4'@g' \
+	-e 's@ROI5@'$ROI5'@g' \
+	-e 's@ROI6@'$ROI6'@g' \
+	-e 's@ROI7@'$ROI7'@g' \
+	-e 's@ROI8@'$ROI8'@g' \
+	-e 's@EVDIR@'$EVDIR'@g' \
+	-e 's@PHYSTS@'$PHYSTS'@g' \
+	<$ITEMPLATE> ${OTEMPLATE}
+	feat ${OTEMPLATE}
+
+else
+	echo "PPItype not defined. Exiting..."
+	exit
+fi
+
+# fix registration
+mkdir -p ${OUTPUT}.feat/reg
+ln -s $FSLDIR/etc/flirtsch/ident.mat ${OUTPUT}.feat/reg/example_func2standard.mat
+ln -s $FSLDIR/etc/flirtsch/ident.mat ${OUTPUT}.feat/reg/standard2example_func.mat
+ln -s $FSLDIR/data/standard/MNI152_T1_2mm.nii.gz ${OUTPUT}.feat/reg/standard.nii.gz
+
+
+# delete files that aren't necessary
 rm -rf ${OUTPUT}.feat/filtered_func_data.nii.gz
 rm -rf ${OUTPUT}.feat/stats/res4d.nii.gz
 rm -rf ${OUTPUT}.feat/stats/corrections.nii.gz
