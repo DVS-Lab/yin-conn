@@ -16,7 +16,7 @@ datadir=${MAINDATADIR}/${subj}/MNINonLinear/Results/tfMRI_${task}_${run}
 OUTPUTDIR=${MAINOUTPUTDIR}/${subj}/MNINonLinear/Results/tfMRI_${task}_${run}
 mkdir -p $OUTPUTDIR
 
-OUTPUT=${OUTPUTDIR}/tmp_L1_${task}_${run}_${H}-hemi
+OUTPUT=${OUTPUTDIR}/L1_${task}_${run}_PPIseed-${H}-${PPIseed}
 DATA=${OUTPUTDIR}/smoothing.feat/ICA_AROMA/denoised_func_data_nonaggr.nii.gz
 NVOLUMES=`fslnvols ${DATA}`
 
@@ -44,14 +44,13 @@ elif [ "$PPIseed" == "PCC" ]; then
 fi
 
 for i in `seq 0 7`; do
-	TSFILE=${OUTPUTDIR}/${H}_${roi}_PPIseed-${PPIseed}_roi-${i}.txt
+	TSFILE=${OUTPUTDIR}/${H}_${ROI_list[$i]}_PPIseed-${PPIseed}_roi-${i}.txt
 	fslmeants -i ${DATA} -o $TSFILE -m ${maskdir}/${H}_${ROI_list[$i]}.nii
 	eval ROI$N=$TSFILE
 done
 EVDIR=${datadir}/EVs
 PHYSTS=${OUTPUTDIR}/${H}_PPIseed-${PPIseed}.txt
 fslmeants -i ${DATA} -o $PHYSTS -m ${maskdir}/${H}_${PPIseed}.nii
-
 
 
 #find and replace: run feat for smoothing
@@ -69,6 +68,7 @@ sed -e 's@OUTPUT@'$OUTPUT'@g' \
 -e 's@ROI7@'$ROI7'@g' \
 -e 's@ROI8@'$ROI8'@g' \
 -e 's@EVDIR@'$EVDIR'@g' \
+-e 's@PHYSTS@'$PHYSTS'@g' \
 <$ITEMPLATE> ${OTEMPLATE}
 feat ${OTEMPLATE}
 
