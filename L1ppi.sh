@@ -17,12 +17,11 @@ OUTPUTDIR=${MAINOUTPUTDIR}/${subj}/MNINonLinear/Results/tfMRI_${task}_${run}
 mkdir -p $OUTPUTDIR
 
 OUTPUT=${OUTPUTDIR}/L1_${task}_${run}_PPIseed-${H}-${PPIseed}
+rm -rf ${OUTPUT}
 DATA=${OUTPUTDIR}/smoothing.feat/ICA_AROMA/denoised_func_data_nonaggr.nii.gz
 NVOLUMES=`fslnvols ${DATA}`
 
 maskdir=${basedir}/masks/${subj}
-N=0
-#ROI_list=( V1 OFA FFA ATL pSTS IFG AMG OFC PCC )
 if [ "$PPIseed" == "V1" ]; then
 	ROI_list=( OFA FFA ATL pSTS IFG AMG OFC PCC )
 elif [ "$PPIseed" == "OFA" ]; then
@@ -46,6 +45,7 @@ fi
 for i in `seq 0 7`; do
 	TSFILE=${OUTPUTDIR}/${H}_${ROI_list[$i]}_PPIseed-${PPIseed}_roi-${i}.txt
 	fslmeants -i ${DATA} -o $TSFILE -m ${maskdir}/${H}_${ROI_list[$i]}.nii
+	let N=$i+1
 	eval ROI$N=$TSFILE
 done
 EVDIR=${datadir}/EVs
