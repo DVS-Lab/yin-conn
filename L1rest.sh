@@ -16,6 +16,10 @@ OUTPUTDIR=${MAINOUTPUTDIR}/${subj}/MNINonLinear/Results/rfMRI_${task}_${run}
 mkdir -p $OUTPUTDIR
 
 OUTPUT=${OUTPUTDIR}/L1_${task}_${run}_${H}-hemi
+if [ -d ${OUTPUT}.feat ]; then
+	#rm -rf ${OUTPUT}.feat
+fi
+
 DATA=${datadir}/rfMRI_${task}_${run}_hp2000_clean.nii.gz
 NVOLUMES=`fslnvols ${DATA}`
 
@@ -52,13 +56,6 @@ mkdir -p ${OUTPUT}.feat/reg
 ln -s $FSLDIR/etc/flirtsch/ident.mat ${OUTPUT}.feat/reg/example_func2standard.mat
 ln -s $FSLDIR/etc/flirtsch/ident.mat ${OUTPUT}.feat/reg/standard2example_func.mat
 ln -s $FSLDIR/data/standard/MNI152_T1_2mm.nii.gz ${OUTPUT}.feat/reg/standard.nii.gz
-
-# fix registration
-mkdir -p ${OUTPUT}.feat/reg
-ln -s $FSLDIR/etc/flirtsch/ident.mat ${OUTPUT}.feat/reg/example_func2standard.mat
-ln -s $FSLDIR/etc/flirtsch/ident.mat ${OUTPUT}.feat/reg/standard2example_func.mat
-ln -s $FSLDIR/data/standard/MNI152_T1_2mm.nii.gz ${OUTPUT}.feat/reg/standard.nii.gz
-
 
 # delete files that aren't necessary
 rm -rf ${OUTPUT}.feat/filtered_func_data.nii.gz
