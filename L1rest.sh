@@ -24,7 +24,7 @@ N=0
 for roi in V1 OFA FFA ATL pSTS IFG AMG OFC PCC; do
 	let N=$N+1
 	TSFILE=${OUTPUTDIR}/${H}_${roi}.txt
-	fslmeants -i ${DATA} -o $TSFILE -m ${maskdir}/${H}_${roi}.nii
+	#fslmeants -i ${DATA} -o $TSFILE -m ${maskdir}/${H}_${roi}.nii
 	eval INPUT$N=$TSFILE
 done
 
@@ -44,7 +44,14 @@ sed -e 's@OUTPUT@'$OUTPUT'@g' \
 -e 's@INPUT8@'$INPUT8'@g' \
 -e 's@INPUT9@'$INPUT9'@g' \
 <$ITEMPLATE> ${OTEMPLATE}
-feat ${OTEMPLATE}
+#feat ${OTEMPLATE}
+
+# fix registration
+rm -rf ${OUTPUT}.feat/reg
+mkdir -p ${OUTPUT}.feat/reg
+ln -s $FSLDIR/etc/flirtsch/ident.mat ${OUTPUT}.feat/reg/example_func2standard.mat
+ln -s $FSLDIR/etc/flirtsch/ident.mat ${OUTPUT}.feat/reg/standard2example_func.mat
+ln -s $FSLDIR/data/standard/MNI152_T1_2mm.nii.gz ${OUTPUT}.feat/reg/standard.nii.gz
 
 rm -rf ${OUTPUT}.feat/filtered_func_data.nii.gz
 rm -rf ${OUTPUT}.feat/stats/res4d.nii.gz

@@ -29,7 +29,7 @@ DATA=${OUTPUTDIR}/filtered.feat/filtered_func_data.nii.gz
 NVOLUMES=`fslnvols ${DATA}`
 EVDIR=${datadir}/EVs
 PHYSTS=${OUTPUTDIR}/${H}_PPIseed-${PPIseed}.txt
-fslmeants -i ${DATA} -o $PHYSTS -m ${maskdir}/${H}_${PPIseed}.nii
+#fslmeants -i ${DATA} -o $PHYSTS -m ${maskdir}/${H}_${PPIseed}.nii
 
 if [ "$PPItype" == "partial" ]; then
 	ITEMPLATE=${basedir}/templates/L1_ppi_partial.fsf
@@ -65,7 +65,7 @@ elif [ "$PPItype" == "full" ]; then
 
 	for i in `seq 0 7`; do
 		TSFILE=${OUTPUTDIR}/${H}_${ROI_list[$i]}_PPIseed-${PPIseed}_roi-${i}.txt
-		fslmeants -i ${DATA} -o $TSFILE -m ${maskdir}/${H}_${ROI_list[$i]}.nii
+		#fslmeants -i ${DATA} -o $TSFILE -m ${maskdir}/${H}_${ROI_list[$i]}.nii
 		let N=$i+1
 		eval ROI$N=$TSFILE
 	done
@@ -86,7 +86,7 @@ elif [ "$PPItype" == "full" ]; then
 	-e 's@EVDIR@'$EVDIR'@g' \
 	-e 's@PHYSTS@'$PHYSTS'@g' \
 	<$ITEMPLATE> ${OTEMPLATE}
-	feat ${OTEMPLATE}
+	#feat ${OTEMPLATE}
 
 else
 	echo "PPItype not defined. Exiting..."
@@ -94,6 +94,7 @@ else
 fi
 
 # fix registration
+rm -rf ${OUTPUT}.feat/reg
 mkdir -p ${OUTPUT}.feat/reg
 ln -s $FSLDIR/etc/flirtsch/ident.mat ${OUTPUT}.feat/reg/example_func2standard.mat
 ln -s $FSLDIR/etc/flirtsch/ident.mat ${OUTPUT}.feat/reg/standard2example_func.mat
