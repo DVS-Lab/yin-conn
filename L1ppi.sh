@@ -21,7 +21,7 @@ mkdir -p $OUTPUTDIR
 # delete old output if it's there to avoid +.feat directories. could improve this.
 OUTPUT=${OUTPUTDIR}/L1_${task}_${run}_PPIseed-${H}-${PPIseed}_${PPItype}
 if [ -d ${OUTPUT}.feat ]; then
-	rm -rf ${OUTPUT}.feat
+	#rm -rf ${OUTPUT}.feat
 fi
 
 maskdir=${basedir}/masks/${subj}
@@ -40,7 +40,7 @@ if [ "$PPItype" == "partial" ]; then
 	-e 's@EVDIR@'$EVDIR'@g' \
 	-e 's@PHYSTS@'$PHYSTS'@g' \
 	<$ITEMPLATE> ${OTEMPLATE}
-	feat ${OTEMPLATE}
+	#feat ${OTEMPLATE}
 
 elif [ "$PPItype" == "full" ]; then
 	if [ "$PPIseed" == "V1" ]; then
