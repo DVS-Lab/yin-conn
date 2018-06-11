@@ -13,14 +13,13 @@ H=$2
 PPIseed=$3
 PPItype=$4 # full (all ROI regressors) or partial (only seed ROI regressor)
 
-datadir=${MAINDATADIR}/${subj}/MNINonLinear/Results/tfMRI_${task}_${run}
-OUTPUTDIR=${MAINOUTPUTDIR}/${subj}/MNINonLinear/Results/tfMRI_${task}_${run}
+OUTPUTDIR=${MAINOUTPUTDIR}/${subj}/MNINonLinear/Results
 
-INPUT1=${OUTPUTDIR}/L1_${task}_LR_PPIseed-${H}-${PPIseed}_${PPItype}.feat
-INPUT2=${OUTPUTDIR}/L1_${task}_RL_PPIseed-${H}-${PPIseed}_${PPItype}.feat
+INPUT1=${OUTPUTDIR}/tfMRI_${task}_LR/L1_${task}_LR_PPIseed-${H}-${PPIseed}_${PPItype}.feat
+INPUT2=${OUTPUTDIR}/tfMRI_${task}_RL/L1_${task}_RL_PPIseed-${H}-${PPIseed}_${PPItype}.feat
 
 # delete old output if it's there to avoid +.feat directories. could improve this.
-OUTPUT=${OUTPUTDIR}/L2_${task}_PPIseed-${H}-${PPIseed}_${PPItype}
+OUTPUT=${OUTPUTDIR}/L1_${task}_PPIseed-${H}-${PPIseed}_${PPItype}
 if [ -d ${OUTPUT}.gfeat ]; then
 	rm -rf ${OUTPUT}.gfeat
 	echo "deleting existing output"

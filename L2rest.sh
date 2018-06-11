@@ -10,12 +10,10 @@ task=$1
 subj=$2
 H=$3
 
-datadir=${MAINDATADIR}/${subj}/MNINonLinear/Results/rfMRI_${task}_${run}
-OUTPUTDIR=${MAINOUTPUTDIR}/${subj}/MNINonLinear/Results/rfMRI_${task}_${run}
-mkdir -p $OUTPUTDIR
+OUTPUTDIR=${MAINOUTPUTDIR}/${subj}/MNINonLinear/Results
 
-INPUT1=${OUTPUTDIR}/L1_${task}_LR-${H}-hemi.feat
-INPUT2=${OUTPUTDIR}/L1_${task}_RL-${H}-hemi.feat
+INPUT1=${OUTPUTDIR}/rfMRI_${task}_LR/L1_${task}_LR_${H}-hemi.feat
+INPUT2=${OUTPUTDIR}/rfMRI_${task}_RL/L1_${task}_RL_${H}-hemi.feat
 
 OUTPUT=${OUTPUTDIR}/L2_${task}_${H}-hemi
 if [ -d ${OUTPUT}.gfeat ]; then
