@@ -17,7 +17,8 @@ mkdir -p $OUTPUTDIR
 
 OUTPUT=${OUTPUTDIR}/L1_${task}_${run}_${H}-hemi
 if [ -d ${OUTPUT}.feat ]; then
-	#rm -rf ${OUTPUT}.feat
+	rm -rf ${OUTPUT}.feat
+	echo "deleting existing output"
 fi
 
 DATA=${datadir}/rfMRI_${task}_${run}_hp2000_clean.nii.gz
@@ -28,7 +29,7 @@ N=0
 for roi in V1 OFA FFA ATL pSTS IFG AMG OFC PCC; do
 	let N=$N+1
 	TSFILE=${OUTPUTDIR}/${H}_${roi}.txt
-	#fslmeants -i ${DATA} -o $TSFILE -m ${maskdir}/${H}_${roi}.nii
+	fslmeants -i ${DATA} -o $TSFILE -m ${maskdir}/${H}_${roi}.nii
 	eval INPUT$N=$TSFILE
 done
 
@@ -48,7 +49,7 @@ sed -e 's@OUTPUT@'$OUTPUT'@g' \
 -e 's@INPUT8@'$INPUT8'@g' \
 -e 's@INPUT9@'$INPUT9'@g' \
 <$ITEMPLATE> ${OTEMPLATE}
-#feat ${OTEMPLATE}
+feat ${OTEMPLATE}
 
 # fix registration
 rm -rf ${OUTPUT}.feat/reg

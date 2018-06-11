@@ -21,7 +21,8 @@ mkdir -p $OUTPUTDIR
 # delete old output if it's there to avoid +.feat directories. could improve this.
 OUTPUT=${OUTPUTDIR}/L1_${task}_${run}_PPIseed-${H}-${PPIseed}_${PPItype}
 if [ -d ${OUTPUT}.feat ]; then
-	#rm -rf ${OUTPUT}.feat
+	rm -rf ${OUTPUT}.feat
+	echo "deleting existing output"
 fi
 
 maskdir=${basedir}/masks/${subj}
@@ -29,7 +30,7 @@ DATA=${OUTPUTDIR}/filtered.feat/filtered_func_data.nii.gz
 NVOLUMES=`fslnvols ${DATA}`
 EVDIR=${datadir}/EVs
 PHYSTS=${OUTPUTDIR}/${H}_PPIseed-${PPIseed}.txt
-#fslmeants -i ${DATA} -o $PHYSTS -m ${maskdir}/${H}_${PPIseed}.nii
+fslmeants -i ${DATA} -o $PHYSTS -m ${maskdir}/${H}_${PPIseed}.nii
 
 if [ "$PPItype" == "partial" ]; then
 	ITEMPLATE=${basedir}/templates/L1_ppi_partial.fsf
@@ -40,7 +41,7 @@ if [ "$PPItype" == "partial" ]; then
 	-e 's@EVDIR@'$EVDIR'@g' \
 	-e 's@PHYSTS@'$PHYSTS'@g' \
 	<$ITEMPLATE> ${OTEMPLATE}
-	#feat ${OTEMPLATE}
+	feat ${OTEMPLATE}
 
 elif [ "$PPItype" == "full" ]; then
 	if [ "$PPIseed" == "V1" ]; then
@@ -65,7 +66,7 @@ elif [ "$PPItype" == "full" ]; then
 
 	for i in `seq 0 7`; do
 		TSFILE=${OUTPUTDIR}/${H}_${ROI_list[$i]}_PPIseed-${PPIseed}_roi-${i}.txt
-		#fslmeants -i ${DATA} -o $TSFILE -m ${maskdir}/${H}_${ROI_list[$i]}.nii
+		fslmeants -i ${DATA} -o $TSFILE -m ${maskdir}/${H}_${ROI_list[$i]}.nii
 		let N=$i+1
 		eval ROI$N=$TSFILE
 	done
@@ -86,7 +87,7 @@ elif [ "$PPItype" == "full" ]; then
 	-e 's@EVDIR@'$EVDIR'@g' \
 	-e 's@PHYSTS@'$PHYSTS'@g' \
 	<$ITEMPLATE> ${OTEMPLATE}
-	#feat ${OTEMPLATE}
+	feat ${OTEMPLATE}
 
 else
 	echo "PPItype not defined. Exiting..."
