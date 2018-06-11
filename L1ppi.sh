@@ -33,7 +33,7 @@ PHYSTS=${OUTPUTDIR}/${H}_PPIseed-${PPIseed}.txt
 
 if [ "$PPItype" == "partial" ]; then
 	ITEMPLATE=${basedir}/templates/L1_ppi_partial.fsf
-	OTEMPLATE=${OUTPUTDIR}/L1_task_${run}_PPIseed-${PPIseed}_partial.fsf
+	OTEMPLATE=${OUTPUTDIR}/L1_task_${run}_PPIseed-${H}-${PPIseed}_partial.fsf
 	sed -e 's@OUTPUT@'$OUTPUT'@g' \
 	-e 's@DATA@'$DATA'@g' \
 	-e 's@NVOLUMES@'$NVOLUMES'@g' \
@@ -71,7 +71,7 @@ elif [ "$PPItype" == "full" ]; then
 	done
 
 	ITEMPLATE=${basedir}/templates/L1_ppi_full.fsf
-	OTEMPLATE=${OUTPUTDIR}/L1_task_${run}_PPIseed-${PPIseed}_full.fsf
+	OTEMPLATE=${OUTPUTDIR}/L1_task_${run}_PPIseed-${H}-${PPIseed}_full.fsf
 	sed -e 's@OUTPUT@'$OUTPUT'@g' \
 	-e 's@DATA@'$DATA'@g' \
 	-e 's@NVOLUMES@'$NVOLUMES'@g' \
