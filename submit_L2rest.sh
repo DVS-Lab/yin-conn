@@ -6,7 +6,7 @@ for task in REST1 REST2; do
     for H in R L; do
 
       #Manages the number of jobs and cores
-      SCRIPTNAME=L1rest.sh
+      SCRIPTNAME=L2rest.sh
       NCORES=24
       while [ $(ps -ef | grep -v grep | grep $SCRIPTNAME | wc -l) -ge $NCORES ]; do
         sleep 1m
