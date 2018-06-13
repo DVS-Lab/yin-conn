@@ -19,7 +19,7 @@ INPUT1=${OUTPUTDIR}/tfMRI_${task}_LR/L1_${task}_LR_PPIseed-${H}-${PPIseed}_${PPI
 INPUT2=${OUTPUTDIR}/tfMRI_${task}_RL/L1_${task}_RL_PPIseed-${H}-${PPIseed}_${PPItype}.feat
 
 # delete old output if it's there to avoid +.feat directories. could improve this.
-OUTPUT=${OUTPUTDIR}/L1_${task}_PPIseed-${H}-${PPIseed}_${PPItype}
+OUTPUT=${OUTPUTDIR}/L2_${task}_PPIseed-${H}-${PPIseed}_${PPItype}
 if [ -d ${OUTPUT}.gfeat ]; then
 	rm -rf ${OUTPUT}.gfeat
 	echo "deleting existing output"
